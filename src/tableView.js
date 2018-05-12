@@ -403,6 +403,12 @@ function TableView(instance) {
     columnHeaderHeight: function() {
       const columnHeaderHeight = instance.runHooks('modifyColumnHeaderHeight');
       return that.settings.columnHeaderHeight || columnHeaderHeight;
+    },
+    rowHeaderFixedOffset: function() {
+      return that.settings.rowHeaderFixedOffset;
+    },
+    colHeaderFixedOffset: function() {
+      return that.settings.colHeaderFixedOffset;
     }
   };
 

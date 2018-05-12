@@ -46,10 +46,10 @@ class TopLeftCornerOverlay extends Overlay {
 
     if (this.trimmingContainer === window) {
       let box = this.wot.wtTable.hider.getBoundingClientRect();
-      let top = Math.ceil(box.top);
-      let left = Math.ceil(box.left);
-      let bottom = Math.ceil(box.bottom);
-      let right = Math.ceil(box.right);
+      let top = Math.ceil(box.top - this.wot.getSetting('colHeaderFixedOffset'));
+      let left = Math.ceil(box.left - this.wot.getSetting('rowHeaderFixedOffset'));
+      let bottom = Math.ceil(box.bottom - this.wot.getSetting('colHeaderFixedOffset'));
+      let right = Math.ceil(box.right - this.wot.getSetting('rowHeaderFixedOffset'));
       let finalLeft = '0';
       let finalTop = '0';
 
