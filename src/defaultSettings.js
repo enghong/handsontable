@@ -2106,6 +2106,24 @@ DefaultSettings.prototype = {
    * @default true
    */
   dragToScroll: true,
+
+  /**
+   * @description
+   * Row Header Fixed Offset position
+   *
+   * @type {Number}
+   * @default 0
+   */
+  rowHeaderFixedOffset: 0,
+
+  /**
+   * @description
+   * Column Header Fixed Offset position
+   *
+   * @type {Number}
+   * @default 0
+   */
+  colHeaderFixedOffset: 0,
 };
 
 export default DefaultSettings;

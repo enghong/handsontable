@@ -99,7 +99,10 @@ class Settings {
       groups: false,
       rowHeaderWidth: null,
       columnHeaderHeight: null,
-      headerClassName: null
+      headerClassName: null,
+
+      rowHeaderFixedOffset: 0,
+      colHeaderFixedOffset: 0
     };
 
     // reference to settings
