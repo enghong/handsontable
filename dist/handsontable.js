@@ -24,7 +24,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
  * Version: 4.0.0
- * Release date: 13/06/2018 (built at 13/06/2018 14:23:12)
+ * Release date: 13/06/2018 (built at 30/05/2019 22:24:42)
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -28954,7 +28954,7 @@ Handsontable.DefaultSettings = _defaultSettings2.default;
 Handsontable.EventManager = _eventManager2.default;
 Handsontable._getListenersCounter = _eventManager.getListenersCounter; // For MemoryLeak tests
 
-Handsontable.buildDate = '13/06/2018 14:23:12';
+Handsontable.buildDate = '30/05/2019 22:24:42';
 Handsontable.packageName = 'handsontable';
 Handsontable.version = '4.0.0';
 
@@ -42606,6 +42606,10 @@ var ContextMenu = function (_BasePlugin) {
      * @type {Menu}
      */
     _this.menu = null;
+    /**
+     * Delayed initialization id
+     */
+    _this.delayedInitializationId = null;
     return _this;
   }
 
@@ -42690,7 +42694,7 @@ var ContextMenu = function (_BasePlugin) {
 
       this.callOnPluginsReady(function () {
         if (_this2.isPluginsReady) {
-          setTimeout(delayedInitialization, 0);
+          _this2.delayedInitializationId = setTimeout(delayedInitialization, 0);
         } else {
           delayedInitialization();
         }
@@ -42722,6 +42726,9 @@ var ContextMenu = function (_BasePlugin) {
       if (this.menu) {
         this.menu.destroy();
         this.menu = null;
+      } else {
+        this.pluginsInitializedCallbacks.length = 0;
+        clearTimeout(this.delayedInitializationId);
       }
       _get(ContextMenu.prototype.__proto__ || Object.getPrototypeOf(ContextMenu.prototype), 'disablePlugin', this).call(this);
     }

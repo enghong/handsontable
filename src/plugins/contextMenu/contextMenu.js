@@ -105,6 +105,10 @@ class ContextMenu extends BasePlugin {
      * @type {Menu}
      */
     this.menu = null;
+    /**
+     * Delayed initialization id
+     */
+    this.delayedInitializationId = null;
   }
 
   /**
@@ -165,7 +169,7 @@ class ContextMenu extends BasePlugin {
 
     this.callOnPluginsReady(() => {
       if (this.isPluginsReady) {
-        setTimeout(delayedInitialization, 0);
+        this.delayedInitializationId = setTimeout(delayedInitialization, 0);
       } else {
         delayedInitialization();
       }
@@ -191,6 +195,9 @@ class ContextMenu extends BasePlugin {
     if (this.menu) {
       this.menu.destroy();
       this.menu = null;
+    } else {
+      this.pluginsInitializedCallbacks.length = 0;
+      clearTimeout(this.delayedInitializationId);
     }
     super.disablePlugin();
   }
