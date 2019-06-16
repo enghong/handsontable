@@ -21,6 +21,8 @@ import TouchScroll from './touchScroll/touchScroll';
 import UndoRedo from './undoRedo/undoRedo';
 import Base from './_base';
 
+import TrimRows from './trimRows/trimRows';
+
 export {
   AutoColumnSize,
   AutoFill,
@@ -42,6 +44,7 @@ export {
   PersistentState,
   Search,
   TouchScroll,
+  TrimRows,
   UndoRedo,
   Base,
 };

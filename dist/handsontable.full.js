@@ -24,7 +24,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
  * Version: 4.0.0
- * Release date: 13/06/2018 (built at 30/05/2019 22:24:42)
+ * Release date: 13/06/2018 (built at 16/06/2019 11:58:43)
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -1914,7 +1914,7 @@ __webpack_require__(155);
 
 __webpack_require__(156);
 
-__webpack_require__(85);
+__webpack_require__(86);
 
 __webpack_require__(157);
 
@@ -1958,7 +1958,7 @@ var _coords = __webpack_require__(56);
 
 var _coords2 = _interopRequireDefault(_coords);
 
-var _range = __webpack_require__(86);
+var _range = __webpack_require__(87);
 
 var _range2 = _interopRequireDefault(_range);
 
@@ -3123,7 +3123,7 @@ function _checkKeySchema(v) {
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var store = __webpack_require__(77)('wks');
+var store = __webpack_require__(78)('wks');
 var uid = __webpack_require__(50);
 var Symbol = __webpack_require__(15).Symbol;
 var USE_SYMBOL = typeof Symbol == 'function';
@@ -5804,7 +5804,7 @@ function filterSeparators(items) {
 
 var anObject = __webpack_require__(18);
 var IE8_DOM_DEFINE = __webpack_require__(99);
-var toPrimitive = __webpack_require__(73);
+var toPrimitive = __webpack_require__(74);
 var dP = Object.defineProperty;
 
 exports.f = __webpack_require__(22) ? Object.defineProperty : function defineProperty(O, P, Attributes) {
@@ -5987,7 +5987,7 @@ module.exports = function (exec) {
 /***/ (function(module, exports, __webpack_require__) {
 
 // to indexed object, toObject with fallback for non-array-like ES3 strings
-var IObject = __webpack_require__(75);
+var IObject = __webpack_require__(76);
 var defined = __webpack_require__(38);
 module.exports = function (it) {
   return IObject(defined(it));
@@ -6828,7 +6828,7 @@ function stripTags(string) {
 
 // 19.1.2.14 / 15.2.3.14 Object.keys(O)
 var $keys = __webpack_require__(100);
-var enumBugKeys = __webpack_require__(78);
+var enumBugKeys = __webpack_require__(79);
 
 module.exports = Object.keys || function keys(O) {
   return $keys(O, enumBugKeys);
@@ -13327,7 +13327,7 @@ var forOf = __webpack_require__(64);
 var anInstance = __webpack_require__(63);
 var isObject = __webpack_require__(9);
 var fails = __webpack_require__(23);
-var $iterDetect = __webpack_require__(79);
+var $iterDetect = __webpack_require__(80);
 var setToStringTag = __webpack_require__(53);
 var inheritIfRequired = __webpack_require__(329);
 
@@ -13411,7 +13411,7 @@ module.exports = function (NAME, wrapper, methods, common, IS_MAP, IS_WEAK) {
 var pIE = __webpack_require__(54);
 var createDesc = __webpack_require__(51);
 var toIObject = __webpack_require__(24);
-var toPrimitive = __webpack_require__(73);
+var toPrimitive = __webpack_require__(74);
 var has = __webpack_require__(29);
 var IE8_DOM_DEFINE = __webpack_require__(99);
 var gOPD = Object.getOwnPropertyDescriptor;
@@ -13438,7 +13438,7 @@ exports.f = __webpack_require__(22) ? gOPD : function getOwnPropertyDescriptor(O
 // 5 -> Array#find
 // 6 -> Array#findIndex
 var ctx = __webpack_require__(32);
-var IObject = __webpack_require__(75);
+var IObject = __webpack_require__(76);
 var toObject = __webpack_require__(33);
 var toLength = __webpack_require__(25);
 var asc = __webpack_require__(330);
@@ -13647,6 +13647,207 @@ registerLanguage(_enUS2.default);
 /* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
+exports.__esModule = true;
+
+var _array = __webpack_require__(1);
+
+var _object = __webpack_require__(2);
+
+var _number = __webpack_require__(5);
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+var MIXIN_NAME = 'arrayMapper';
+
+/**
+ * @type {Object}
+ */
+var arrayMapper = {
+  _arrayMap: [],
+
+  /**
+   * Get translated index by its physical index.
+   *
+   * @param {Number} physicalIndex Physical index.
+   * @return {Number|null} Returns translated index mapped by passed physical index.
+   */
+  getValueByIndex: function getValueByIndex(physicalIndex) {
+    var length = this._arrayMap.length;
+    var translatedIndex = null;
+
+    if (physicalIndex < length) {
+      translatedIndex = this._arrayMap[physicalIndex];
+    }
+
+    return translatedIndex;
+  },
+
+
+  /**
+   * Get physical index by its translated index.
+   *
+   * @param {*} translatedIndex Value to search.
+   * @returns {Number|null} Returns a physical index of the array mapper.
+   */
+  getIndexByValue: function getIndexByValue(translatedIndex) {
+    var physicalIndex = void 0;
+
+    // eslint-disable-next-line no-cond-assign, no-return-assign
+    return (physicalIndex = this._arrayMap.indexOf(translatedIndex)) === -1 ? null : physicalIndex;
+  },
+
+
+  /**
+   * Insert new items to array mapper starting at passed index. New entries will be a continuation of last value in the array.
+   *
+   * @param {Number} physicalIndex Array index.
+   * @param {Number} [amount=1] Defines how many items will be created to an array.
+   * @returns {Array} Returns added items.
+   */
+  insertItems: function insertItems(physicalIndex) {
+    var _this = this;
+
+    var amount = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
+    var newIndex = (0, _array.arrayMax)(this._arrayMap) + 1;
+    var addedItems = [];
+
+    (0, _number.rangeEach)(amount - 1, function (count) {
+      addedItems.push(_this._arrayMap.splice(physicalIndex + count, 0, newIndex + count));
+    });
+
+    return addedItems;
+  },
+
+
+  /**
+   * Remove items from array mapper.
+   *
+   * @param {Number} physicalIndex Array index.
+   * @param {Number} [amount=1] Defines how many items will be created to an array.
+   * @returns {Array} Returns removed items.
+   */
+  removeItems: function removeItems(physicalIndex) {
+    var _this2 = this;
+
+    var amount = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
+    var removedItems = [];
+
+    if (Array.isArray(physicalIndex)) {
+      var mapCopy = [].concat(this._arrayMap);
+
+      // Sort descending
+      physicalIndex.sort(function (a, b) {
+        return b - a;
+      });
+
+      removedItems = (0, _array.arrayReduce)(physicalIndex, function (acc, item) {
+        _this2._arrayMap.splice(item, 1);
+
+        return acc.concat(mapCopy.slice(item, item + 1));
+      }, []);
+    } else {
+      removedItems = this._arrayMap.splice(physicalIndex, amount);
+    }
+
+    return removedItems;
+  },
+
+
+  /**
+   * Unshift items (remove and shift chunk of array to the left).
+   *
+   * @param {Number|Array} physicalIndex Array index or Array of indexes to unshift.
+   * @param {Number} [amount=1] Defines how many items will be removed from an array (when index is passed as number).
+   */
+  unshiftItems: function unshiftItems(physicalIndex) {
+    var amount = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
+    var removedItems = this.removeItems(physicalIndex, amount);
+
+    function countRowShift(logicalRow) {
+      // Todo: compare perf between reduce vs sort->each->brake
+      return (0, _array.arrayReduce)(removedItems, function (count, removedLogicalRow) {
+        if (logicalRow > removedLogicalRow) {
+          count++;
+        }
+
+        return count;
+      }, 0);
+    }
+
+    this._arrayMap = (0, _array.arrayMap)(this._arrayMap, function (logicalRow, physicalRow) {
+      var rowShift = countRowShift(logicalRow);
+
+      if (rowShift) {
+        logicalRow -= rowShift;
+      }
+
+      return logicalRow;
+    });
+  },
+
+
+  /**
+   * Shift (right shifting) items starting at passed index.
+   *
+   * @param {Number} physicalIndex Array index.
+   * @param {Number} [amount=1] Defines how many items will be created to an array.
+   */
+  shiftItems: function shiftItems(physicalIndex) {
+    var _this3 = this;
+
+    var amount = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
+    this._arrayMap = (0, _array.arrayMap)(this._arrayMap, function (row) {
+      if (row >= physicalIndex) {
+        row += amount;
+      }
+      return row;
+    });
+
+    (0, _number.rangeEach)(amount - 1, function (count) {
+      _this3._arrayMap.splice(physicalIndex + count, 0, physicalIndex + count);
+    });
+  },
+
+
+  /**
+   * Swap indexes in arrayMapper.
+   *
+   * @param {Number} physicalIndexFrom index to move.
+   * @param {Number} physicalIndexTo index to.
+   */
+  swapIndexes: function swapIndexes(physicalIndexFrom, physicalIndexTo) {
+    var _arrayMap;
+
+    (_arrayMap = this._arrayMap).splice.apply(_arrayMap, [physicalIndexTo, 0].concat(_toConsumableArray(this._arrayMap.splice(physicalIndexFrom, 1))));
+  },
+
+
+  /**
+   * Clear all stored index<->value information from an array.
+   */
+  clearMap: function clearMap() {
+    this._arrayMap.length = 0;
+  }
+};
+
+(0, _object.defineGetter)(arrayMapper, 'MIXIN_NAME', MIXIN_NAME, {
+  writable: false,
+  enumerable: false
+});
+
+exports.default = arrayMapper;
+
+/***/ }),
+/* 73 */
+/***/ (function(module, exports, __webpack_require__) {
+
 var isObject = __webpack_require__(9);
 var document = __webpack_require__(15).document;
 // typeof document.createElement is 'object' in old IE
@@ -13657,7 +13858,7 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.1.1 ToPrimitive(input [, PreferredType])
@@ -13675,21 +13876,21 @@ module.exports = function (it, S) {
 
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
 var anObject = __webpack_require__(18);
 var dPs = __webpack_require__(327);
-var enumBugKeys = __webpack_require__(78);
-var IE_PROTO = __webpack_require__(76)('IE_PROTO');
+var enumBugKeys = __webpack_require__(79);
+var IE_PROTO = __webpack_require__(77)('IE_PROTO');
 var Empty = function () { /* empty */ };
 var PROTOTYPE = 'prototype';
 
 // Create object with fake `null` prototype: use iframe Object with cleared prototype
 var createDict = function () {
   // Thrash, waste and sodomy: IE GC bug
-  var iframe = __webpack_require__(72)('iframe');
+  var iframe = __webpack_require__(73)('iframe');
   var i = enumBugKeys.length;
   var lt = '<';
   var gt = '>';
@@ -13722,7 +13923,7 @@ module.exports = Object.create || function create(O, Properties) {
 
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // fallback for non-array-like ES3 and non-enumerable old V8 strings
@@ -13734,10 +13935,10 @@ module.exports = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
 
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var shared = __webpack_require__(77)('keys');
+var shared = __webpack_require__(78)('keys');
 var uid = __webpack_require__(50);
 module.exports = function (key) {
   return shared[key] || (shared[key] = uid(key));
@@ -13745,7 +13946,7 @@ module.exports = function (key) {
 
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var global = __webpack_require__(15);
@@ -13757,7 +13958,7 @@ module.exports = function (key) {
 
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports) {
 
 // IE 8- don't enum bug keys
@@ -13767,7 +13968,7 @@ module.exports = (
 
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var ITERATOR = __webpack_require__(12)('iterator');
@@ -13795,13 +13996,13 @@ module.exports = function (exec, skipClosing) {
 
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var ctx = __webpack_require__(32);
 var invoke = __webpack_require__(333);
 var html = __webpack_require__(102);
-var cel = __webpack_require__(72);
+var cel = __webpack_require__(73);
 var global = __webpack_require__(15);
 var process = global.process;
 var setTask = global.setImmediate;
@@ -13885,12 +14086,12 @@ module.exports = {
 
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.7 / 15.2.3.4 Object.getOwnPropertyNames(O)
 var $keys = __webpack_require__(100);
-var hiddenKeys = __webpack_require__(78).concat('length', 'prototype');
+var hiddenKeys = __webpack_require__(79).concat('length', 'prototype');
 
 exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
   return $keys(O, hiddenKeys);
@@ -13898,7 +14099,7 @@ exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
 
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // helper for String#{startsWith, endsWith, includes}
@@ -13912,7 +14113,7 @@ module.exports = function (that, searchString, NAME) {
 
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var MATCH = __webpack_require__(12)('match');
@@ -13930,7 +14131,7 @@ module.exports = function (KEY) {
 
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13945,7 +14146,7 @@ module.exports = function (object, index, value) {
 
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13986,7 +14187,7 @@ addToUnscopables('entries');
 
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14675,7 +14876,7 @@ var CellRange = function () {
 exports.default = CellRange;
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14795,7 +14996,7 @@ exports.getRegisteredCellTypeNames = getNames;
 exports.getRegisteredCellTypes = getValues;
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14813,7 +15014,7 @@ exports.default = Core;
 
 var _element = __webpack_require__(0);
 
-var _setting = __webpack_require__(89);
+var _setting = __webpack_require__(90);
 
 var _function = __webpack_require__(43);
 
@@ -14859,7 +15060,7 @@ var _dataSource = __webpack_require__(389);
 
 var _dataSource2 = _interopRequireDefault(_dataSource);
 
-var _data = __webpack_require__(90);
+var _data = __webpack_require__(91);
 
 var _recordTranslator = __webpack_require__(314);
 
@@ -14875,7 +15076,7 @@ var _defaultSettings = __webpack_require__(316);
 
 var _defaultSettings2 = _interopRequireDefault(_defaultSettings);
 
-var _cellTypes = __webpack_require__(87);
+var _cellTypes = __webpack_require__(88);
 
 var _i18n = __webpack_require__(317);
 
@@ -18497,7 +18698,7 @@ function Core(rootElement, userSettings) {
 };
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18530,7 +18731,7 @@ function columnFactory(GridSettings, conflictList) {
 }
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18545,7 +18746,7 @@ exports.createEmptySpreadsheetData = createEmptySpreadsheetData;
 exports.translateRowsToColumns = translateRowsToColumns;
 exports.cellMethodLookupFactory = cellMethodLookupFactory;
 
-var _cellTypes = __webpack_require__(87);
+var _cellTypes = __webpack_require__(88);
 
 var _object = __webpack_require__(2);
 
@@ -18739,7 +18940,7 @@ function cellMethodLookupFactory(methodName, allowUndefined) {
 }
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19006,7 +19207,7 @@ function isValidCoord(coord) {
 };
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19545,207 +19746,6 @@ var GhostTable = function () {
 }();
 
 exports.default = GhostTable;
-
-/***/ }),
-/* 93 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-
-var _array = __webpack_require__(1);
-
-var _object = __webpack_require__(2);
-
-var _number = __webpack_require__(5);
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-var MIXIN_NAME = 'arrayMapper';
-
-/**
- * @type {Object}
- */
-var arrayMapper = {
-  _arrayMap: [],
-
-  /**
-   * Get translated index by its physical index.
-   *
-   * @param {Number} physicalIndex Physical index.
-   * @return {Number|null} Returns translated index mapped by passed physical index.
-   */
-  getValueByIndex: function getValueByIndex(physicalIndex) {
-    var length = this._arrayMap.length;
-    var translatedIndex = null;
-
-    if (physicalIndex < length) {
-      translatedIndex = this._arrayMap[physicalIndex];
-    }
-
-    return translatedIndex;
-  },
-
-
-  /**
-   * Get physical index by its translated index.
-   *
-   * @param {*} translatedIndex Value to search.
-   * @returns {Number|null} Returns a physical index of the array mapper.
-   */
-  getIndexByValue: function getIndexByValue(translatedIndex) {
-    var physicalIndex = void 0;
-
-    // eslint-disable-next-line no-cond-assign, no-return-assign
-    return (physicalIndex = this._arrayMap.indexOf(translatedIndex)) === -1 ? null : physicalIndex;
-  },
-
-
-  /**
-   * Insert new items to array mapper starting at passed index. New entries will be a continuation of last value in the array.
-   *
-   * @param {Number} physicalIndex Array index.
-   * @param {Number} [amount=1] Defines how many items will be created to an array.
-   * @returns {Array} Returns added items.
-   */
-  insertItems: function insertItems(physicalIndex) {
-    var _this = this;
-
-    var amount = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
-
-    var newIndex = (0, _array.arrayMax)(this._arrayMap) + 1;
-    var addedItems = [];
-
-    (0, _number.rangeEach)(amount - 1, function (count) {
-      addedItems.push(_this._arrayMap.splice(physicalIndex + count, 0, newIndex + count));
-    });
-
-    return addedItems;
-  },
-
-
-  /**
-   * Remove items from array mapper.
-   *
-   * @param {Number} physicalIndex Array index.
-   * @param {Number} [amount=1] Defines how many items will be created to an array.
-   * @returns {Array} Returns removed items.
-   */
-  removeItems: function removeItems(physicalIndex) {
-    var _this2 = this;
-
-    var amount = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
-
-    var removedItems = [];
-
-    if (Array.isArray(physicalIndex)) {
-      var mapCopy = [].concat(this._arrayMap);
-
-      // Sort descending
-      physicalIndex.sort(function (a, b) {
-        return b - a;
-      });
-
-      removedItems = (0, _array.arrayReduce)(physicalIndex, function (acc, item) {
-        _this2._arrayMap.splice(item, 1);
-
-        return acc.concat(mapCopy.slice(item, item + 1));
-      }, []);
-    } else {
-      removedItems = this._arrayMap.splice(physicalIndex, amount);
-    }
-
-    return removedItems;
-  },
-
-
-  /**
-   * Unshift items (remove and shift chunk of array to the left).
-   *
-   * @param {Number|Array} physicalIndex Array index or Array of indexes to unshift.
-   * @param {Number} [amount=1] Defines how many items will be removed from an array (when index is passed as number).
-   */
-  unshiftItems: function unshiftItems(physicalIndex) {
-    var amount = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
-
-    var removedItems = this.removeItems(physicalIndex, amount);
-
-    function countRowShift(logicalRow) {
-      // Todo: compare perf between reduce vs sort->each->brake
-      return (0, _array.arrayReduce)(removedItems, function (count, removedLogicalRow) {
-        if (logicalRow > removedLogicalRow) {
-          count++;
-        }
-
-        return count;
-      }, 0);
-    }
-
-    this._arrayMap = (0, _array.arrayMap)(this._arrayMap, function (logicalRow, physicalRow) {
-      var rowShift = countRowShift(logicalRow);
-
-      if (rowShift) {
-        logicalRow -= rowShift;
-      }
-
-      return logicalRow;
-    });
-  },
-
-
-  /**
-   * Shift (right shifting) items starting at passed index.
-   *
-   * @param {Number} physicalIndex Array index.
-   * @param {Number} [amount=1] Defines how many items will be created to an array.
-   */
-  shiftItems: function shiftItems(physicalIndex) {
-    var _this3 = this;
-
-    var amount = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
-
-    this._arrayMap = (0, _array.arrayMap)(this._arrayMap, function (row) {
-      if (row >= physicalIndex) {
-        row += amount;
-      }
-      return row;
-    });
-
-    (0, _number.rangeEach)(amount - 1, function (count) {
-      _this3._arrayMap.splice(physicalIndex + count, 0, physicalIndex + count);
-    });
-  },
-
-
-  /**
-   * Swap indexes in arrayMapper.
-   *
-   * @param {Number} physicalIndexFrom index to move.
-   * @param {Number} physicalIndexTo index to.
-   */
-  swapIndexes: function swapIndexes(physicalIndexFrom, physicalIndexTo) {
-    var _arrayMap;
-
-    (_arrayMap = this._arrayMap).splice.apply(_arrayMap, [physicalIndexTo, 0].concat(_toConsumableArray(this._arrayMap.splice(physicalIndexFrom, 1))));
-  },
-
-
-  /**
-   * Clear all stored index<->value information from an array.
-   */
-  clearMap: function clearMap() {
-    this._arrayMap.length = 0;
-  }
-};
-
-(0, _object.defineGetter)(arrayMapper, 'MIXIN_NAME', MIXIN_NAME, {
-  writable: false,
-  enumerable: false
-});
-
-exports.default = arrayMapper;
 
 /***/ }),
 /* 94 */
@@ -20358,7 +20358,7 @@ module.exports = __webpack_require__(66)(MAP, function (get) {
 "use strict";
 
 var dP = __webpack_require__(20).f;
-var create = __webpack_require__(74);
+var create = __webpack_require__(75);
 var redefineAll = __webpack_require__(61);
 var ctx = __webpack_require__(32);
 var anInstance = __webpack_require__(63);
@@ -20507,7 +20507,7 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = !__webpack_require__(22) && !__webpack_require__(23)(function () {
-  return Object.defineProperty(__webpack_require__(72)('div'), 'a', { get: function () { return 7; } }).a != 7;
+  return Object.defineProperty(__webpack_require__(73)('div'), 'a', { get: function () { return 7; } }).a != 7;
 });
 
 
@@ -20518,7 +20518,7 @@ module.exports = !__webpack_require__(22) && !__webpack_require__(23)(function (
 var has = __webpack_require__(29);
 var toIObject = __webpack_require__(24);
 var arrayIndexOf = __webpack_require__(101)(false);
-var IE_PROTO = __webpack_require__(76)('IE_PROTO');
+var IE_PROTO = __webpack_require__(77)('IE_PROTO');
 
 module.exports = function (object, names) {
   var O = toIObject(object);
@@ -20729,7 +20729,7 @@ module.exports = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCE
 // 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
 var has = __webpack_require__(29);
 var toObject = __webpack_require__(33);
-var IE_PROTO = __webpack_require__(76)('IE_PROTO');
+var IE_PROTO = __webpack_require__(77)('IE_PROTO');
 var ObjectProto = Object.prototype;
 
 module.exports = Object.getPrototypeOf || function (O) {
@@ -20910,7 +20910,7 @@ var getKeys = __webpack_require__(37);
 var gOPS = __webpack_require__(69);
 var pIE = __webpack_require__(54);
 var toObject = __webpack_require__(33);
-var IObject = __webpack_require__(75);
+var IObject = __webpack_require__(76);
 var $assign = Object.assign;
 
 // should work with symbols and should have deterministic property order (V8 bug)
@@ -21069,7 +21069,7 @@ var aFunction = __webpack_require__(62);
 var anInstance = __webpack_require__(63);
 var forOf = __webpack_require__(64);
 var speciesConstructor = __webpack_require__(332);
-var task = __webpack_require__(80).set;
+var task = __webpack_require__(81).set;
 var microtask = __webpack_require__(334)();
 var newPromiseCapabilityModule = __webpack_require__(119);
 var perform = __webpack_require__(335);
@@ -21291,7 +21291,7 @@ $export($export.S + $export.F * (LIBRARY || !USE_NATIVE), PROMISE, {
     return promiseResolve(LIBRARY && this === Wrapper ? $Promise : this, x);
   }
 });
-$export($export.S + $export.F * !(USE_NATIVE && __webpack_require__(79)(function (iter) {
+$export($export.S + $export.F * !(USE_NATIVE && __webpack_require__(80)(function (iter) {
   $Promise.all(iter)['catch'](empty);
 })), PROMISE, {
   // 25.4.4.1 Promise.all(iterable)
@@ -21376,7 +21376,7 @@ var $export = __webpack_require__(3);
 var redefine = __webpack_require__(30);
 var META = __webpack_require__(34).KEY;
 var $fails = __webpack_require__(23);
-var shared = __webpack_require__(77);
+var shared = __webpack_require__(78);
 var setToStringTag = __webpack_require__(53);
 var uid = __webpack_require__(50);
 var wks = __webpack_require__(12);
@@ -21387,9 +21387,9 @@ var isArray = __webpack_require__(114);
 var anObject = __webpack_require__(18);
 var isObject = __webpack_require__(9);
 var toIObject = __webpack_require__(24);
-var toPrimitive = __webpack_require__(73);
+var toPrimitive = __webpack_require__(74);
 var createDesc = __webpack_require__(51);
-var _create = __webpack_require__(74);
+var _create = __webpack_require__(75);
 var gOPNExt = __webpack_require__(122);
 var $GOPD = __webpack_require__(67);
 var $DP = __webpack_require__(20);
@@ -21516,7 +21516,7 @@ if (!USE_NATIVE) {
 
   $GOPD.f = $getOwnPropertyDescriptor;
   $DP.f = $defineProperty;
-  __webpack_require__(81).f = gOPNExt.f = $getOwnPropertyNames;
+  __webpack_require__(82).f = gOPNExt.f = $getOwnPropertyNames;
   __webpack_require__(54).f = $propertyIsEnumerable;
   __webpack_require__(69).f = $getOwnPropertySymbols;
 
@@ -21616,7 +21616,7 @@ exports.f = __webpack_require__(12);
 
 // fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
 var toIObject = __webpack_require__(24);
-var gOPN = __webpack_require__(81).f;
+var gOPN = __webpack_require__(82).f;
 var toString = {}.toString;
 
 var windowNames = typeof window == 'object' && window && Object.getOwnPropertyNames
@@ -21936,11 +21936,11 @@ module.exports = function repeat(count) {
 
 var $export = __webpack_require__(3);
 var toLength = __webpack_require__(25);
-var context = __webpack_require__(82);
+var context = __webpack_require__(83);
 var STARTS_WITH = 'startsWith';
 var $startsWith = ''[STARTS_WITH];
 
-$export($export.P + $export.F * __webpack_require__(83)(STARTS_WITH), 'String', {
+$export($export.P + $export.F * __webpack_require__(84)(STARTS_WITH), 'String', {
   startsWith: function startsWith(searchString /* , position = 0 */) {
     var that = context(this, searchString, STARTS_WITH);
     var index = toLength(Math.min(arguments.length > 1 ? arguments[1] : undefined, that.length));
@@ -21975,11 +21975,11 @@ module.exports = function (it) {
 
 var $export = __webpack_require__(3);
 var toLength = __webpack_require__(25);
-var context = __webpack_require__(82);
+var context = __webpack_require__(83);
 var ENDS_WITH = 'endsWith';
 var $endsWith = ''[ENDS_WITH];
 
-$export($export.P + $export.F * __webpack_require__(83)(ENDS_WITH), 'String', {
+$export($export.P + $export.F * __webpack_require__(84)(ENDS_WITH), 'String', {
   endsWith: function endsWith(searchString /* , endPosition = @length */) {
     var that = context(this, searchString, ENDS_WITH);
     var endPosition = arguments.length > 1 ? arguments[1] : undefined;
@@ -22001,10 +22001,10 @@ $export($export.P + $export.F * __webpack_require__(83)(ENDS_WITH), 'String', {
 // 21.1.3.7 String.prototype.includes(searchString, position = 0)
 
 var $export = __webpack_require__(3);
-var context = __webpack_require__(82);
+var context = __webpack_require__(83);
 var INCLUDES = 'includes';
 
-$export($export.P + $export.F * __webpack_require__(83)(INCLUDES), 'String', {
+$export($export.P + $export.F * __webpack_require__(84)(INCLUDES), 'String', {
   includes: function includes(searchString /* , position = 0 */) {
     return !!~context(this, searchString, INCLUDES)
       .indexOf(searchString, arguments.length > 1 ? arguments[1] : undefined);
@@ -22162,10 +22162,10 @@ var toObject = __webpack_require__(33);
 var call = __webpack_require__(103);
 var isArrayIter = __webpack_require__(104);
 var toLength = __webpack_require__(25);
-var createProperty = __webpack_require__(84);
+var createProperty = __webpack_require__(85);
 var getIterFn = __webpack_require__(105);
 
-$export($export.S + $export.F * !__webpack_require__(79)(function (iter) { Array.from(iter); }), 'Array', {
+$export($export.S + $export.F * !__webpack_require__(80)(function (iter) { Array.from(iter); }), 'Array', {
   // 22.1.2.1 Array.from(arrayLike, mapfn = undefined, thisArg = undefined)
   from: function from(arrayLike /* , mapfn = undefined, thisArg = undefined */) {
     var O = toObject(arrayLike);
@@ -22201,7 +22201,7 @@ $export($export.S + $export.F * !__webpack_require__(79)(function (iter) { Array
 "use strict";
 
 var $export = __webpack_require__(3);
-var createProperty = __webpack_require__(84);
+var createProperty = __webpack_require__(85);
 
 // WebKit Array.of isn't generic
 $export($export.S + $export.F * __webpack_require__(23)(function () {
@@ -22464,7 +22464,7 @@ var $export = __webpack_require__(3);
 var ownKeys = __webpack_require__(344);
 var toIObject = __webpack_require__(24);
 var gOPD = __webpack_require__(67);
-var createProperty = __webpack_require__(84);
+var createProperty = __webpack_require__(85);
 
 $export($export.S, 'Object', {
   getOwnPropertyDescriptors: function getOwnPropertyDescriptors(object) {
@@ -22558,7 +22558,7 @@ $export($export.P + $export.F * /Version\/10\.\d+(\.\d+)? Safari\//.test(userAge
 /***/ (function(module, exports, __webpack_require__) {
 
 var $export = __webpack_require__(3);
-var $task = __webpack_require__(80);
+var $task = __webpack_require__(81);
 $export($export.G + $export.B, {
   setImmediate: $task.set,
   clearImmediate: $task.clear
@@ -22569,7 +22569,7 @@ $export($export.G + $export.B, {
 /* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var $iterators = __webpack_require__(85);
+var $iterators = __webpack_require__(86);
 var getKeys = __webpack_require__(37);
 var redefine = __webpack_require__(30);
 var global = __webpack_require__(15);
@@ -25911,7 +25911,7 @@ var _coords = __webpack_require__(56);
 
 var _coords2 = _interopRequireDefault(_coords);
 
-var _range = __webpack_require__(86);
+var _range = __webpack_require__(87);
 
 var _range2 = _interopRequireDefault(_range);
 
@@ -29692,7 +29692,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 exports.registerIdentity = registerIdentity;
 exports.getTranslator = getTranslator;
 
-var _core = __webpack_require__(88);
+var _core = __webpack_require__(89);
 
 var _core2 = _interopRequireDefault(_core);
 
@@ -34057,7 +34057,7 @@ __webpack_require__(155);
 
 __webpack_require__(156);
 
-__webpack_require__(85);
+__webpack_require__(86);
 
 __webpack_require__(157);
 
@@ -34101,9 +34101,9 @@ var _renderers = __webpack_require__(14);
 
 var _validators = __webpack_require__(28);
 
-var _cellTypes = __webpack_require__(87);
+var _cellTypes = __webpack_require__(88);
 
-var _core = __webpack_require__(88);
+var _core = __webpack_require__(89);
 
 var _core2 = _interopRequireDefault(_core);
 
@@ -34119,7 +34119,7 @@ var _pluginHooks = __webpack_require__(16);
 
 var _pluginHooks2 = _interopRequireDefault(_pluginHooks);
 
-var _ghostTable = __webpack_require__(92);
+var _ghostTable = __webpack_require__(93);
 
 var _ghostTable2 = _interopRequireDefault(_ghostTable);
 
@@ -34131,7 +34131,7 @@ var _browser = __webpack_require__(27);
 
 var browserHelpers = _interopRequireWildcard(_browser);
 
-var _data = __webpack_require__(90);
+var _data = __webpack_require__(91);
 
 var dataHelpers = _interopRequireWildcard(_data);
 
@@ -34159,7 +34159,7 @@ var _object = __webpack_require__(2);
 
 var objectHelpers = _interopRequireWildcard(_object);
 
-var _setting = __webpack_require__(89);
+var _setting = __webpack_require__(90);
 
 var settingHelpers = _interopRequireWildcard(_setting);
 
@@ -34218,7 +34218,7 @@ Handsontable.DefaultSettings = _defaultSettings2.default;
 Handsontable.EventManager = _eventManager2.default;
 Handsontable._getListenersCounter = _eventManager.getListenersCounter; // For MemoryLeak tests
 
-Handsontable.buildDate = '30/05/2019 22:24:42';
+Handsontable.buildDate = '16/06/2019 11:58:43';
 Handsontable.packageName = 'handsontable';
 Handsontable.version = '4.0.0';
 
@@ -34358,7 +34358,7 @@ module.exports = __webpack_require__(22) ? Object.defineProperties : function de
 
 "use strict";
 
-var create = __webpack_require__(74);
+var create = __webpack_require__(75);
 var descriptor = __webpack_require__(51);
 var setToStringTag = __webpack_require__(53);
 var IteratorPrototype = {};
@@ -34463,7 +34463,7 @@ module.exports = function (fn, args, that) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var global = __webpack_require__(15);
-var macrotask = __webpack_require__(80).set;
+var macrotask = __webpack_require__(81).set;
 var Observer = global.MutationObserver || global.WebKitMutationObserver;
 var process = global.process;
 var Promise = global.Promise;
@@ -34713,7 +34713,7 @@ module.exports = function fill(value /* , start = 0, end = @length */) {
 /***/ (function(module, exports, __webpack_require__) {
 
 // all object keys, includes non-enumerable and symbols
-var gOPN = __webpack_require__(81);
+var gOPN = __webpack_require__(82);
 var gOPS = __webpack_require__(69);
 var anObject = __webpack_require__(18);
 var Reflect = __webpack_require__(15).Reflect;
@@ -36004,7 +36004,7 @@ var _coords = __webpack_require__(56);
 
 var _coords2 = _interopRequireDefault(_coords);
 
-var _range = __webpack_require__(86);
+var _range = __webpack_require__(87);
 
 var _range2 = _interopRequireDefault(_range);
 
@@ -39761,9 +39761,9 @@ var _SheetClip = __webpack_require__(312);
 
 var _SheetClip2 = _interopRequireDefault(_SheetClip);
 
-var _data = __webpack_require__(90);
+var _data = __webpack_require__(91);
 
-var _setting = __webpack_require__(89);
+var _setting = __webpack_require__(90);
 
 var _object = __webpack_require__(2);
 
@@ -42678,7 +42678,7 @@ var _transformation = __webpack_require__(402);
 
 var _transformation2 = _interopRequireDefault(_transformation);
 
-var _utils = __webpack_require__(91);
+var _utils = __webpack_require__(92);
 
 var _templateLiteralTag = __webpack_require__(42);
 
@@ -43807,7 +43807,7 @@ function jQueryWrapper(Handsontable) {
 
 
 exports.__esModule = true;
-exports.Base = exports.UndoRedo = exports.TouchScroll = exports.Search = exports.PersistentState = exports.ObserveChanges = exports.MultipleSelectionHandles = exports.MergeCells = exports.ManualRowResize = exports.ManualRowMove = exports.ManualColumnResize = exports.ManualColumnMove = exports.ManualColumnFreeze = exports.DragToScroll = exports.CustomBorders = exports.CopyPaste = exports.ContextMenu = exports.Comments = exports.ColumnSorting = exports.AutoRowSize = exports.AutoFill = exports.AutoColumnSize = undefined;
+exports.Base = exports.UndoRedo = exports.TrimRows = exports.TouchScroll = exports.Search = exports.PersistentState = exports.ObserveChanges = exports.MultipleSelectionHandles = exports.MergeCells = exports.ManualRowResize = exports.ManualRowMove = exports.ManualColumnResize = exports.ManualColumnMove = exports.ManualColumnFreeze = exports.DragToScroll = exports.CustomBorders = exports.CopyPaste = exports.ContextMenu = exports.Comments = exports.ColumnSorting = exports.AutoRowSize = exports.AutoFill = exports.AutoColumnSize = undefined;
 
 var _persistentState = __webpack_require__(405);
 
@@ -43897,6 +43897,10 @@ var _base = __webpack_require__(10);
 
 var _base2 = _interopRequireDefault(_base);
 
+var _trimRows = __webpack_require__(482);
+
+var _trimRows2 = _interopRequireDefault(_trimRows);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.AutoColumnSize = _autoColumnSize2.default;
@@ -43919,6 +43923,7 @@ exports.ObserveChanges = _observeChanges2.default;
 exports.PersistentState = _persistentState2.default;
 exports.Search = _search2.default;
 exports.TouchScroll = _touchScroll2.default;
+exports.TrimRows = _trimRows2.default;
 exports.UndoRedo = _undoRedo2.default;
 exports.Base = _base2.default;
 
@@ -44305,7 +44310,7 @@ var _feature = __webpack_require__(40);
 
 var _element = __webpack_require__(0);
 
-var _ghostTable = __webpack_require__(92);
+var _ghostTable = __webpack_require__(93);
 
 var _ghostTable2 = _interopRequireDefault(_ghostTable);
 
@@ -45808,7 +45813,7 @@ var _feature = __webpack_require__(40);
 
 var _element = __webpack_require__(0);
 
-var _ghostTable = __webpack_require__(92);
+var _ghostTable = __webpack_require__(93);
 
 var _ghostTable2 = _interopRequireDefault(_ghostTable);
 
@@ -47545,7 +47550,7 @@ exports.__esModule = true;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _arrayMapper = __webpack_require__(93);
+var _arrayMapper = __webpack_require__(72);
 
 var _arrayMapper2 = _interopRequireDefault(_arrayMapper);
 
@@ -50560,7 +50565,7 @@ var _utils = __webpack_require__(19);
 
 var _array = __webpack_require__(1);
 
-var _utils2 = __webpack_require__(91);
+var _utils2 = __webpack_require__(92);
 
 var _constants = __webpack_require__(7);
 
@@ -50630,7 +50635,7 @@ var _utils = __webpack_require__(19);
 
 var _array = __webpack_require__(1);
 
-var _utils2 = __webpack_require__(91);
+var _utils2 = __webpack_require__(92);
 
 var _constants = __webpack_require__(7);
 
@@ -50821,7 +50826,7 @@ exports.__esModule = true;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _core = __webpack_require__(88);
+var _core = __webpack_require__(89);
 
 var _core2 = _interopRequireDefault(_core);
 
@@ -55289,7 +55294,7 @@ exports.__esModule = true;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _arrayMapper = __webpack_require__(93);
+var _arrayMapper = __webpack_require__(72);
 
 var _arrayMapper2 = _interopRequireDefault(_arrayMapper);
 
@@ -57111,7 +57116,7 @@ exports.__esModule = true;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _arrayMapper = __webpack_require__(93);
+var _arrayMapper = __webpack_require__(72);
 
 var _arrayMapper2 = _interopRequireDefault(_arrayMapper);
 
@@ -62706,6 +62711,594 @@ hook.register('beforeRedo');
 hook.register('afterRedo');
 
 exports.default = UndoRedo;
+
+/***/ }),
+/* 482 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _base = __webpack_require__(10);
+
+var _base2 = _interopRequireDefault(_base);
+
+var _number = __webpack_require__(5);
+
+var _plugins = __webpack_require__(8);
+
+var _rowsMapper = __webpack_require__(483);
+
+var _rowsMapper2 = _interopRequireDefault(_rowsMapper);
+
+var _array = __webpack_require__(1);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * @plugin TrimRows
+ *
+ * @description
+ * The plugin allows to trim certain rows. The trimming is achieved by applying the transformation algorithm to the data
+ * transformation. In this case, when the row is trimmed it is not accessible using `getData*` methods thus the trimmed
+ * data is not visible to other plugins.
+ *
+ * @example
+ * ```js
+ * const container = document.getElementById('example');
+ * const hot = new Handsontable(container, {
+ *   date: getData(),
+ *   // hide selected rows on table initialization
+ *   trimRows: [1, 2, 5]
+ * });
+ *
+ * // access the trimRows plugin instance
+ * const trimRowsPlugin = hot.getPlugin('trimRows');
+ *
+ * // hide single row
+ * trimRowsPlugin.trimRow(1);
+ *
+ * // hide multiple rows
+ * trimRowsPlugin.trimRow(1, 2, 9);
+ *
+ * // or as an array
+ * trimRowsPlugin.trimRows([1, 2, 9]);
+ *
+ * // show single row
+ * trimRowsPlugin.untrimRow(1);
+ *
+ * // show multiple rows
+ * trimRowsPlugin.untrimRow(1, 2, 9);
+ *
+ * // or as an array
+ * trimRowsPlugin.untrimRows([1, 2, 9]);
+ *
+ * // rerender table to see the changes
+ * hot.render();
+ * ```
+ */
+var TrimRows = function (_BasePlugin) {
+  _inherits(TrimRows, _BasePlugin);
+
+  function TrimRows(hotInstance) {
+    _classCallCheck(this, TrimRows);
+
+    /**
+     * List of trimmed row indexes.
+     *
+     * @private
+     * @type {Array}
+     */
+    var _this = _possibleConstructorReturn(this, (TrimRows.__proto__ || Object.getPrototypeOf(TrimRows)).call(this, hotInstance));
+
+    _this.trimmedRows = [];
+    /**
+     * List of last removed row indexes.
+     *
+     * @private
+     * @type {Array}
+     */
+    _this.removedRows = [];
+    /**
+     * Object containing visual row indexes mapped to data source indexes.
+     *
+     * @private
+     * @type {RowsMapper}
+     */
+    _this.rowsMapper = new _rowsMapper2.default(_this);
+    return _this;
+  }
+
+  /**
+   * Checks if the plugin is enabled in the handsontable settings. This method is executed in {@link Hooks#beforeInit}
+   * hook and if it returns `true` than the {@link AutoRowSize#enablePlugin} method is called.
+   *
+   * @returns {Boolean}
+   */
+
+
+  _createClass(TrimRows, [{
+    key: 'isEnabled',
+    value: function isEnabled() {
+      return !!this.hot.getSettings().trimRows;
+    }
+
+    /**
+     * Enables the plugin functionality for this Handsontable instance.
+     */
+
+  }, {
+    key: 'enablePlugin',
+    value: function enablePlugin() {
+      var _this2 = this;
+
+      if (this.enabled) {
+        return;
+      }
+      var settings = this.hot.getSettings().trimRows;
+
+      if (Array.isArray(settings)) {
+        this.trimmedRows = settings;
+      }
+      this.rowsMapper.createMap(this.hot.countSourceRows());
+
+      this.addHook('modifyRow', function (row, source) {
+        return _this2.onModifyRow(row, source);
+      });
+      this.addHook('unmodifyRow', function (row, source) {
+        return _this2.onUnmodifyRow(row, source);
+      });
+      this.addHook('beforeCreateRow', function (index, amount, source) {
+        return _this2.onBeforeCreateRow(index, amount, source);
+      });
+      this.addHook('afterCreateRow', function (index, amount) {
+        return _this2.onAfterCreateRow(index, amount);
+      });
+      this.addHook('beforeRemoveRow', function (index, amount) {
+        return _this2.onBeforeRemoveRow(index, amount);
+      });
+      this.addHook('afterRemoveRow', function () {
+        return _this2.onAfterRemoveRow();
+      });
+      this.addHook('afterLoadData', function (firstRun) {
+        return _this2.onAfterLoadData(firstRun);
+      });
+
+      _get(TrimRows.prototype.__proto__ || Object.getPrototypeOf(TrimRows.prototype), 'enablePlugin', this).call(this);
+    }
+
+    /**
+     * Updates the plugin state. This method is executed when {@link Core#updateSettings} is invoked.
+     */
+
+  }, {
+    key: 'updatePlugin',
+    value: function updatePlugin() {
+      var settings = this.hot.getSettings().trimRows;
+
+      if (Array.isArray(settings)) {
+        this.disablePlugin();
+        this.enablePlugin();
+      }
+
+      _get(TrimRows.prototype.__proto__ || Object.getPrototypeOf(TrimRows.prototype), 'updatePlugin', this).call(this);
+    }
+
+    /**
+     * Disables the plugin functionality for this Handsontable instance.
+     */
+
+  }, {
+    key: 'disablePlugin',
+    value: function disablePlugin() {
+      this.trimmedRows = [];
+      this.removedRows.length = 0;
+      this.rowsMapper.clearMap();
+      _get(TrimRows.prototype.__proto__ || Object.getPrototypeOf(TrimRows.prototype), 'disablePlugin', this).call(this);
+    }
+
+    /**
+     * Trims the rows provided in the array.
+     *
+     * @param {Number[]} rows Array of physical row indexes.
+     * @fires Hooks#skipLengthCache
+     * @fires Hooks#beforeTrimRow
+     * @fires Hooks#afterTrimRow
+     */
+
+  }, {
+    key: 'trimRows',
+    value: function trimRows(rows) {
+      var currentTrimConfig = this.trimmedRows;
+      var isValidConfig = this.isValidConfig(rows);
+      var destinationTrimConfig = currentTrimConfig;
+
+      if (isValidConfig) {
+        destinationTrimConfig = Array.from(new Set(currentTrimConfig.concat(rows)));
+      }
+
+      var allowTrimRow = this.hot.runHooks('beforeTrimRow', currentTrimConfig, destinationTrimConfig, isValidConfig);
+
+      if (allowTrimRow === false) {
+        return;
+      }
+
+      if (isValidConfig) {
+        this.trimmedRows = destinationTrimConfig;
+
+        this.hot.runHooks('skipLengthCache', 100);
+        this.rowsMapper.createMap(this.hot.countSourceRows());
+      }
+
+      this.hot.runHooks('afterTrimRow', currentTrimConfig, destinationTrimConfig, isValidConfig, isValidConfig && destinationTrimConfig.length > currentTrimConfig.length);
+    }
+
+    /**
+     * Trims the row provided as physical row index (counting from 0).
+     *
+     * @param {...Number} row Physical row index.
+     */
+
+  }, {
+    key: 'trimRow',
+    value: function trimRow() {
+      for (var _len = arguments.length, row = Array(_len), _key = 0; _key < _len; _key++) {
+        row[_key] = arguments[_key];
+      }
+
+      this.trimRows(row);
+    }
+
+    /**
+     * Untrims the rows provided in the array.
+     *
+     * @param {Number[]} rows Array of physical row indexes.
+     * @fires Hooks#skipLengthCache
+     * @fires Hooks#beforeUntrimRow
+     * @fires Hooks#afterUntrimRow
+     */
+
+  }, {
+    key: 'untrimRows',
+    value: function untrimRows(rows) {
+      var currentTrimConfig = this.trimmedRows;
+      var isValidConfig = this.isValidConfig(rows);
+      var destinationTrimConfig = currentTrimConfig;
+
+      if (isValidConfig) {
+        destinationTrimConfig = this.trimmedRows.filter(function (trimmedRow) {
+          return rows.includes(trimmedRow) === false;
+        });
+      }
+
+      var allowUntrimRow = this.hot.runHooks('beforeUntrimRow', currentTrimConfig, destinationTrimConfig, isValidConfig);
+
+      if (allowUntrimRow === false) {
+        return;
+      }
+
+      if (isValidConfig) {
+        this.trimmedRows = destinationTrimConfig;
+
+        this.hot.runHooks('skipLengthCache', 100);
+        this.rowsMapper.createMap(this.hot.countSourceRows());
+      }
+
+      this.hot.runHooks('afterUntrimRow', currentTrimConfig, destinationTrimConfig, isValidConfig, isValidConfig && destinationTrimConfig.length < currentTrimConfig.length);
+    }
+
+    /**
+     * Untrims the row provided as row index (counting from 0).
+     *
+     * @param {...Number} row Physical row index.
+     */
+
+  }, {
+    key: 'untrimRow',
+    value: function untrimRow() {
+      for (var _len2 = arguments.length, row = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        row[_key2] = arguments[_key2];
+      }
+
+      this.untrimRows(row);
+    }
+
+    /**
+     * Checks if given physical row is hidden.
+     *
+     * @returns {Boolean}
+     */
+
+  }, {
+    key: 'isTrimmed',
+    value: function isTrimmed(row) {
+      return this.trimmedRows.includes(row);
+    }
+
+    /**
+     * Untrims all trimmed rows.
+     */
+
+  }, {
+    key: 'untrimAll',
+    value: function untrimAll() {
+      this.untrimRows([].concat(this.trimmedRows));
+    }
+
+    /**
+     * Get if trim config is valid.
+     *
+     * @param {Array} trimmedRows List of physical row indexes.
+     * @returns {Boolean}
+     */
+
+  }, {
+    key: 'isValidConfig',
+    value: function isValidConfig(trimmedRows) {
+      var _this3 = this;
+
+      return trimmedRows.every(function (trimmedRow) {
+        return Number.isInteger(trimmedRow) && trimmedRow >= 0 && trimmedRow < _this3.hot.countSourceRows();
+      });
+    }
+
+    /**
+     * On modify row listener.
+     *
+     * @private
+     * @param {Number} row Visual row index.
+     * @param {String} source Source name.
+     * @returns {Number|null}
+     */
+
+  }, {
+    key: 'onModifyRow',
+    value: function onModifyRow(row, source) {
+      var physicalRow = row;
+
+      if (source !== this.pluginName) {
+        physicalRow = this.rowsMapper.getValueByIndex(physicalRow);
+      }
+
+      return physicalRow;
+    }
+
+    /**
+     * On unmodifyRow listener.
+     *
+     * @private
+     * @param {Number} row Physical row index.
+     * @param {String} source Source name.
+     * @returns {Number|null}
+     */
+
+  }, {
+    key: 'onUnmodifyRow',
+    value: function onUnmodifyRow(row, source) {
+      var visualRow = row;
+
+      if (source !== this.pluginName) {
+        visualRow = this.rowsMapper.getIndexByValue(visualRow);
+      }
+
+      return visualRow;
+    }
+
+    /**
+     * `beforeCreateRow` hook callback.
+     *
+     * @private
+     * @param {Number} index Index of the newly created row.
+     * @param {Number} amount Amount of created rows.
+     * @param {String} source Source of the change.
+     */
+
+  }, {
+    key: 'onBeforeCreateRow',
+    value: function onBeforeCreateRow(index, amount, source) {
+      if (this.isEnabled() && this.trimmedRows.length > 0 && source === 'auto') {
+        return false;
+      }
+    }
+
+    /**
+     * On after create row listener.
+     *
+     * @private
+     * @param {Number} index Visual row index.
+     * @param {Number} amount Defines how many rows removed.
+     */
+
+  }, {
+    key: 'onAfterCreateRow',
+    value: function onAfterCreateRow(index, amount) {
+      var _this4 = this;
+
+      this.rowsMapper.shiftItems(index, amount);
+
+      this.trimmedRows = (0, _array.arrayMap)(this.trimmedRows, function (trimmedRow) {
+        if (trimmedRow >= _this4.rowsMapper.getValueByIndex(index)) {
+          return trimmedRow + amount;
+        }
+
+        return trimmedRow;
+      });
+    }
+
+    /**
+     * On before remove row listener.
+     *
+     * @private
+     * @param {Number} index Visual row index.
+     * @param {Number} amount Defines how many rows removed.
+     *
+     * @fires Hooks#modifyRow
+     */
+
+  }, {
+    key: 'onBeforeRemoveRow',
+    value: function onBeforeRemoveRow(index, amount) {
+      var _this5 = this;
+
+      this.removedRows.length = 0;
+
+      if (index !== false) {
+        // Collect physical row index.
+        (0, _number.rangeEach)(index, index + amount - 1, function (removedIndex) {
+          _this5.removedRows.push(_this5.hot.runHooks('modifyRow', removedIndex, _this5.pluginName));
+        });
+      }
+    }
+
+    /**
+     * On after remove row listener.
+     *
+     * @private
+     */
+
+  }, {
+    key: 'onAfterRemoveRow',
+    value: function onAfterRemoveRow() {
+      var _this6 = this;
+
+      this.rowsMapper.unshiftItems(this.removedRows);
+      // TODO: Maybe it can be optimized? N x M checks, where N is number of already trimmed rows and M is number of removed rows.
+      // Decreasing physical indexes (some of them should be updated, because few indexes are missing in new list of indexes after removal).
+      this.trimmedRows = (0, _array.arrayMap)(this.trimmedRows, function (trimmedRow) {
+        return trimmedRow - _this6.removedRows.filter(function (removedRow) {
+          return removedRow < trimmedRow;
+        }).length;
+      });
+    }
+
+    /**
+     * On after load data listener.
+     *
+     * @private
+     * @param {Boolean} firstRun Indicates if hook was fired while Handsontable initialization.
+     */
+
+  }, {
+    key: 'onAfterLoadData',
+    value: function onAfterLoadData(firstRun) {
+      if (!firstRun) {
+        this.rowsMapper.createMap(this.hot.countSourceRows());
+      }
+    }
+
+    /**
+     * Destroys the plugin instance.
+     */
+
+  }, {
+    key: 'destroy',
+    value: function destroy() {
+      this.rowsMapper.destroy();
+      _get(TrimRows.prototype.__proto__ || Object.getPrototypeOf(TrimRows.prototype), 'destroy', this).call(this);
+    }
+  }]);
+
+  return TrimRows;
+}(_base2.default);
+
+(0, _plugins.registerPlugin)('trimRows', TrimRows);
+
+exports.default = TrimRows;
+
+/***/ }),
+/* 483 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _arrayMapper = __webpack_require__(72);
+
+var _arrayMapper2 = _interopRequireDefault(_arrayMapper);
+
+var _object = __webpack_require__(2);
+
+var _number = __webpack_require__(5);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * @class RowsMapper
+ * @plugin TrimRows
+ */
+var RowsMapper = function () {
+  function RowsMapper(trimRows) {
+    _classCallCheck(this, RowsMapper);
+
+    /**
+     * Instance of TrimRows plugin.
+     *
+     * @type {TrimRows}
+     */
+    this.trimRows = trimRows;
+  }
+
+  /**
+   * Reset current map array and create new one.
+   *
+   * @param {Number} [length] Custom generated map length.
+   */
+
+
+  _createClass(RowsMapper, [{
+    key: 'createMap',
+    value: function createMap(length) {
+      var _this = this;
+
+      var rowOffset = 0;
+      var originLength = length === void 0 ? this._arrayMap.length : length;
+
+      this._arrayMap.length = 0;
+
+      (0, _number.rangeEach)(originLength - 1, function (itemIndex) {
+        if (_this.trimRows.isTrimmed(itemIndex)) {
+          rowOffset += 1;
+        } else {
+          _this._arrayMap[itemIndex - rowOffset] = itemIndex;
+        }
+      });
+    }
+
+    /**
+     * Destroy class.
+     */
+
+  }, {
+    key: 'destroy',
+    value: function destroy() {
+      this._arrayMap = null;
+    }
+  }]);
+
+  return RowsMapper;
+}();
+
+(0, _object.mixin)(RowsMapper, _arrayMapper2.default);
+
+exports.default = RowsMapper;
 
 /***/ })
 /******/ ])["default"];
