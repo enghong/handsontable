@@ -3354,6 +3354,15 @@ export default function Core(rootElement, userSettings, rootInstanceSymbol = fal
   };
 
   /**
+   * Returns the editor manager
+   *
+   * @returns {Object} The editor manager.
+   */
+  this.getEditorManager = function() {
+    return editorManager;
+  }
+
+  /**
    * Returns plugin instance using the plugin name provided.
    *
    * @memberof Core#
