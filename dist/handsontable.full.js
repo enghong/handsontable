@@ -24,7 +24,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
  * Version: 4.0.0
- * Release date: 13/06/2018 (built at 19/04/2020 22:44:44)
+ * Release date: 13/06/2018 (built at 27/04/2020 18:56:53)
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -1836,6 +1836,92 @@ module.exports = $export;
 
 
 exports.__esModule = true;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+exports.isNumeric = isNumeric;
+exports.rangeEach = rangeEach;
+exports.rangeEachReverse = rangeEachReverse;
+exports.valueAccordingPercent = valueAccordingPercent;
+/**
+ * Checks if value of n is a numeric one
+ * http://jsperf.com/isnan-vs-isnumeric/4
+ * @param n
+ * @returns {boolean}
+ */
+function isNumeric(n) {
+  /* eslint-disable */
+  var t = typeof n === 'undefined' ? 'undefined' : _typeof(n);
+
+  return t == 'number' ? !isNaN(n) && isFinite(n) : t == 'string' ? !n.length ? false : n.length == 1 ? /\d/.test(n) : /^\s*[+-]?\s*(?:(?:\d+(?:\.\d+)?(?:e[+-]?\d+)?)|(?:0x[a-f\d]+))\s*$/i.test(n) : t == 'object' ? !!n && typeof n.valueOf() == 'number' && !(n instanceof Date) : false;
+}
+
+/**
+ * A specialized version of `.forEach` defined by ranges.
+ *
+ * @param {Number} rangeFrom The number from start iterate.
+ * @param {Number|Function} rangeTo The number where finish iterate or function as a iteratee.
+ * @param {Function} [iteratee] The function invoked per iteration.
+ */
+function rangeEach(rangeFrom, rangeTo, iteratee) {
+  var index = -1;
+
+  if (typeof rangeTo === 'function') {
+    iteratee = rangeTo;
+    rangeTo = rangeFrom;
+  } else {
+    index = rangeFrom - 1;
+  }
+  while (++index <= rangeTo) {
+    if (iteratee(index) === false) {
+      break;
+    }
+  }
+}
+
+/**
+ * A specialized version of `.forEach` defined by ranges iterable in reverse order.
+ *
+ * @param {Number} rangeFrom The number from start iterate.
+ * @param {Number|Function} rangeTo The number where finish iterate or function as a iteratee.
+ * @param {Function} [iteratee] The function invoked per iteration.
+ */
+function rangeEachReverse(rangeFrom, rangeTo, iteratee) {
+  var index = rangeFrom + 1;
+
+  if (typeof rangeTo === 'function') {
+    iteratee = rangeTo;
+    rangeTo = 0;
+  }
+  while (--index >= rangeTo) {
+    if (iteratee(index) === false) {
+      break;
+    }
+  }
+}
+
+/**
+ * Calculate value from percent.
+ *
+ * @param {Number} value Base value from percent will be calculated.
+ * @param {String|Number} percent Can be Number or String (eq. `'33%'`).
+ * @returns {Number}
+ */
+function valueAccordingPercent(value, percent) {
+  percent = parseInt(percent.toString().replace('%', ''), 10);
+  percent = parseInt(value * percent / 100, 10);
+
+  return percent;
+}
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
 exports.Viewport = exports.TableRenderer = exports.Table = exports.Settings = exports.Selection = exports.Scroll = exports.Overlays = exports.Event = exports.Core = exports.default = exports.Border = exports.TopLeftCornerOverlay = exports.TopOverlay = exports.LeftOverlay = exports.DebugOverlay = exports.RowFilter = exports.ColumnFilter = exports.CellRange = exports.CellCoords = exports.ViewportRowsCalculator = exports.ViewportColumnsCalculator = undefined;
 
 __webpack_require__(98);
@@ -2049,92 +2135,6 @@ exports.Settings = _settings2.default;
 exports.Table = _table2.default;
 exports.TableRenderer = _tableRenderer2.default;
 exports.Viewport = _viewport2.default;
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-exports.isNumeric = isNumeric;
-exports.rangeEach = rangeEach;
-exports.rangeEachReverse = rangeEachReverse;
-exports.valueAccordingPercent = valueAccordingPercent;
-/**
- * Checks if value of n is a numeric one
- * http://jsperf.com/isnan-vs-isnumeric/4
- * @param n
- * @returns {boolean}
- */
-function isNumeric(n) {
-  /* eslint-disable */
-  var t = typeof n === 'undefined' ? 'undefined' : _typeof(n);
-
-  return t == 'number' ? !isNaN(n) && isFinite(n) : t == 'string' ? !n.length ? false : n.length == 1 ? /\d/.test(n) : /^\s*[+-]?\s*(?:(?:\d+(?:\.\d+)?(?:e[+-]?\d+)?)|(?:0x[a-f\d]+))\s*$/i.test(n) : t == 'object' ? !!n && typeof n.valueOf() == 'number' && !(n instanceof Date) : false;
-}
-
-/**
- * A specialized version of `.forEach` defined by ranges.
- *
- * @param {Number} rangeFrom The number from start iterate.
- * @param {Number|Function} rangeTo The number where finish iterate or function as a iteratee.
- * @param {Function} [iteratee] The function invoked per iteration.
- */
-function rangeEach(rangeFrom, rangeTo, iteratee) {
-  var index = -1;
-
-  if (typeof rangeTo === 'function') {
-    iteratee = rangeTo;
-    rangeTo = rangeFrom;
-  } else {
-    index = rangeFrom - 1;
-  }
-  while (++index <= rangeTo) {
-    if (iteratee(index) === false) {
-      break;
-    }
-  }
-}
-
-/**
- * A specialized version of `.forEach` defined by ranges iterable in reverse order.
- *
- * @param {Number} rangeFrom The number from start iterate.
- * @param {Number|Function} rangeTo The number where finish iterate or function as a iteratee.
- * @param {Function} [iteratee] The function invoked per iteration.
- */
-function rangeEachReverse(rangeFrom, rangeTo, iteratee) {
-  var index = rangeFrom + 1;
-
-  if (typeof rangeTo === 'function') {
-    iteratee = rangeTo;
-    rangeTo = 0;
-  }
-  while (--index >= rangeTo) {
-    if (iteratee(index) === false) {
-      break;
-    }
-  }
-}
-
-/**
- * Calculate value from percent.
- *
- * @param {Number} value Base value from percent will be calculated.
- * @param {String|Number} percent Can be Number or String (eq. `'33%'`).
- * @returns {Number}
- */
-function valueAccordingPercent(value, percent) {
-  percent = parseInt(percent.toString().replace('%', ''), 10);
-  percent = parseInt(value * percent / 100, 10);
-
-  return percent;
-}
 
 /***/ }),
 /* 6 */
@@ -5600,7 +5600,7 @@ exports.filterSeparators = filterSeparators;
 
 var _array = __webpack_require__(1);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 var _element = __webpack_require__(0);
 
@@ -6726,7 +6726,7 @@ exports.stripTags = stripTags;
 
 var _mixed = __webpack_require__(11);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 /**
  * Convert string to upper case first letter.
@@ -12282,7 +12282,7 @@ exports.f = {}.propertyIsEnumerable;
 exports.__esModule = true;
 exports.EditorState = undefined;
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 var _mixed = __webpack_require__(11);
 
@@ -13656,7 +13656,7 @@ var _array = __webpack_require__(1);
 
 var _object = __webpack_require__(2);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -15066,7 +15066,7 @@ var _validators = __webpack_require__(28);
 
 var _string = __webpack_require__(36);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 var _tableView = __webpack_require__(388);
 
@@ -15082,7 +15082,7 @@ var _recordTranslator = __webpack_require__(314);
 
 var _rootInstance = __webpack_require__(315);
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 var _pluginHooks = __webpack_require__(16);
 
@@ -18984,7 +18984,7 @@ exports.transformSelectionToColumnDistance = transformSelectionToColumnDistance;
 exports.transformSelectionToRowDistance = transformSelectionToRowDistance;
 exports.isValidCoord = isValidCoord;
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 var _array = __webpack_require__(1);
 
@@ -19988,7 +19988,7 @@ var _templateObject = _taggedTemplateLiteral(['The merged cell declared with {ro
     _templateObject3 = _taggedTemplateLiteral(['The merged cell declared at [', ', ', '] has both "rowspan" \n     and "colspan" declared as "1", which makes it a single cell. It cannot be added to the collection.'], ['The merged cell declared at [', ', ', '] has both "rowspan" \n     and "colspan" declared as "1", which makes it a single cell. It cannot be added to the collection.']),
     _templateObject4 = _taggedTemplateLiteral(['The merged cell declared at [', ', ', '] has "rowspan" or "colspan" declared as \n      "0", which is not supported. It cannot be added to the collection.'], ['The merged cell declared at [', ', ', '] has "rowspan" or "colspan" declared as \n      "0", which is not supported. It cannot be added to the collection.']);
 
-var _index = __webpack_require__(4);
+var _index = __webpack_require__(5);
 
 var _templateLiteralTag = __webpack_require__(43);
 
@@ -25417,7 +25417,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _element = __webpack_require__(0);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -29565,7 +29565,7 @@ exports.handleMouseEvent = handleMouseEvent;
 
 var _event = __webpack_require__(13);
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 /**
  * MouseDown handler.
@@ -32695,7 +32695,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _object = __webpack_require__(2);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 var _mixed = __webpack_require__(11);
 
@@ -32927,7 +32927,7 @@ exports.__esModule = true;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -34175,7 +34175,7 @@ var _mixed = __webpack_require__(11);
 
 var mixedHelpers = _interopRequireWildcard(_mixed);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 var numberHelpers = _interopRequireWildcard(_number);
 
@@ -34242,7 +34242,7 @@ Handsontable.DefaultSettings = _defaultSettings2.default;
 Handsontable.EventManager = _eventManager2.default;
 Handsontable._getListenersCounter = _eventManager.getListenersCounter; // For MemoryLeak tests
 
-Handsontable.buildDate = '19/04/2020 22:44:44';
+Handsontable.buildDate = '27/04/2020 18:56:53';
 Handsontable.packageName = 'handsontable';
 Handsontable.version = '4.0.0';
 
@@ -38653,7 +38653,7 @@ var _eventManager = __webpack_require__(6);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 var _index = __webpack_require__(14);
 
@@ -39148,7 +39148,7 @@ var _numbro2 = _interopRequireDefault(_numbro);
 
 var _index = __webpack_require__(14);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -39216,7 +39216,7 @@ var _element = __webpack_require__(0);
 
 var _index = __webpack_require__(14);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 /**
  * @private
@@ -39798,7 +39798,7 @@ var _interval = __webpack_require__(385);
 
 var _interval2 = _interopRequireDefault(_interval);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 var _multiMap = __webpack_require__(386);
 
@@ -40903,7 +40903,7 @@ exports.default = MultiMap;
 
 exports.__esModule = true;
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 var _unicode = __webpack_require__(21);
 
@@ -41388,7 +41388,7 @@ var _eventManager2 = _interopRequireDefault(_eventManager);
 
 var _event = __webpack_require__(13);
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 var _src2 = _interopRequireDefault(_src);
 
@@ -42062,7 +42062,7 @@ var _object = __webpack_require__(2);
 
 var _array = __webpack_require__(1);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -42510,7 +42510,7 @@ exports.createHighlight = createHighlight;
 
 exports.__esModule = true;
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 /**
  * @return {Selection}
@@ -42536,7 +42536,7 @@ exports.default = createHighlight;
 
 exports.__esModule = true;
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 /**
  * Creates the new instance of Selection responsible for highlighting area of the selected multiple cells.
@@ -42572,7 +42572,7 @@ exports.default = createHighlight;
 
 exports.__esModule = true;
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 /**
  * Creates the new instance of Selection responsible for highlighting currently selected cell. This type of selection
@@ -42606,7 +42606,7 @@ exports.default = createHighlight;
 
 exports.__esModule = true;
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 /**
  * Creates the new instance of Selection, responsible for highlighting cells which are covered by fill handle
@@ -42637,7 +42637,7 @@ exports.default = createHighlight;
 
 exports.__esModule = true;
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 /**
  * Creates the new instance of Selection, responsible for highlighting row and column headers. This type of selection
@@ -42685,7 +42685,7 @@ var _range = __webpack_require__(401);
 
 var _range2 = _interopRequireDefault(_range);
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 var _keyStateObserver = __webpack_require__(319);
 
@@ -43419,7 +43419,7 @@ exports.__esModule = true;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -43597,7 +43597,7 @@ exports.__esModule = true;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 var _object = __webpack_require__(2);
 
@@ -44341,7 +44341,7 @@ var _ghostTable2 = _interopRequireDefault(_ghostTable);
 
 var _object = __webpack_require__(2);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 var _plugins = __webpack_require__(8);
 
@@ -44351,7 +44351,7 @@ var _samplesGenerator2 = _interopRequireDefault(_samplesGenerator);
 
 var _string = __webpack_require__(36);
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -45016,7 +45016,7 @@ var _eventManager2 = _interopRequireDefault(_eventManager);
 
 var _plugins = __webpack_require__(8);
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 var _utils = __webpack_require__(409);
 
@@ -45680,7 +45680,7 @@ var _object = __webpack_require__(2);
 
 var _mixed = __webpack_require__(11);
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 var DIRECTIONS = exports.DIRECTIONS = {
   horizontal: 'horizontal',
@@ -45844,7 +45844,7 @@ var _ghostTable2 = _interopRequireDefault(_ghostTable);
 
 var _object = __webpack_require__(2);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 var _plugins = __webpack_require__(8);
 
@@ -47581,7 +47581,7 @@ var _arrayMapper2 = _interopRequireDefault(_arrayMapper);
 
 var _object = __webpack_require__(2);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -47871,7 +47871,7 @@ var _eventManager = __webpack_require__(6);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 var _plugins = __webpack_require__(8);
 
@@ -51912,13 +51912,13 @@ var _SheetClip = __webpack_require__(312);
 
 var _SheetClip2 = _interopRequireDefault(_SheetClip);
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 var _element = __webpack_require__(0);
 
 var _array = __webpack_require__(1);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 var _plugins = __webpack_require__(8);
 
@@ -52919,9 +52919,9 @@ var _plugins = __webpack_require__(8);
 
 var _object = __webpack_require__(2);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 var _pluginHooks = __webpack_require__(16);
 
@@ -54428,7 +54428,7 @@ var _array = __webpack_require__(1);
 
 var _element = __webpack_require__(0);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 var _eventManager = __webpack_require__(6);
 
@@ -54448,7 +54448,7 @@ var _guideline = __webpack_require__(460);
 
 var _guideline2 = _interopRequireDefault(_guideline);
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 __webpack_require__(461);
 
@@ -55327,7 +55327,7 @@ var _array = __webpack_require__(1);
 
 var _object = __webpack_require__(2);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -55570,7 +55570,7 @@ var _event = __webpack_require__(13);
 
 var _array = __webpack_require__(1);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 var _plugins = __webpack_require__(8);
 
@@ -56230,7 +56230,7 @@ var _array = __webpack_require__(1);
 
 var _element = __webpack_require__(0);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 var _eventManager = __webpack_require__(6);
 
@@ -57149,7 +57149,7 @@ var _array = __webpack_require__(1);
 
 var _object = __webpack_require__(2);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -57392,7 +57392,7 @@ var _event = __webpack_require__(13);
 
 var _array = __webpack_require__(1);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 var _plugins = __webpack_require__(8);
 
@@ -57977,7 +57977,7 @@ var _plugins = __webpack_require__(8);
 
 var _event = __webpack_require__(13);
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 var _cellsCollection = __webpack_require__(470);
 
@@ -58005,7 +58005,7 @@ var _object = __webpack_require__(2);
 
 var _console = __webpack_require__(58);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 var _utils = __webpack_require__(324);
 
@@ -59200,9 +59200,9 @@ var _cellCoords = __webpack_require__(97);
 
 var _cellCoords2 = _interopRequireDefault(_cellCoords);
 
-var _index = __webpack_require__(4);
+var _index = __webpack_require__(5);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 var _console = __webpack_require__(58);
 
@@ -59583,7 +59583,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _object = __webpack_require__(2);
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 var _array = __webpack_require__(1);
 
@@ -60088,7 +60088,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -60407,7 +60407,7 @@ var _eventManager2 = _interopRequireDefault(_eventManager);
 
 var _plugins = __webpack_require__(8);
 
-var _src = __webpack_require__(4);
+var _src = __webpack_require__(5);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -61342,7 +61342,7 @@ var _plugins = __webpack_require__(8);
 
 var _object = __webpack_require__(2);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 var _mixed = __webpack_require__(11);
 
@@ -61978,19 +61978,22 @@ exports.__esModule = true;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          * Handsontable UndoRedo class
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          */
+
+
 var _pluginHooks = __webpack_require__(16);
 
 var _pluginHooks2 = _interopRequireDefault(_pluginHooks);
 
 var _array = __webpack_require__(1);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 var _object = __webpack_require__(2);
 
 var _event = __webpack_require__(13);
-
-var _src = __webpack_require__(4);
 
 var _utils = __webpack_require__(19);
 
@@ -62000,21 +62003,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Handsontable UndoRedo class
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 /**
  * @description
- * Handsontable UndoRedo plugin. It allows to undo and redo certain actions done in the table.
- * Please note, that not all actions are currently undo-able.
+ * Handsontable UndoRedo plugin allows to undo and redo certain actions done in the table.
+ *
+ * __Note__, that not all actions are currently undo-able. The UndoRedo plugin is enabled by default.
  *
  * @example
  * ```js
- * ...
  * undo: true
- * ...
  * ```
  * @class UndoRedo
  * @plugin UndoRedo
@@ -62027,9 +62028,34 @@ function UndoRedo(instance) {
   this.ignoreNewActions = false;
 
   instance.addHook('afterChange', function (changes, source) {
-    if (changes && source !== 'UndoRedo.undo' && source !== 'UndoRedo.redo' && source !== 'MergeCells') {
-      plugin.done(new UndoRedo.ChangeAction(changes));
+    var changesLen = changes && changes.length;
+
+    if (!changesLen || ['UndoRedo.undo', 'UndoRedo.redo', 'MergeCells'].includes(source)) {
+      return;
     }
+    var hasDifferences = changes.find(function (change) {
+      var _change = _slicedToArray(change, 4),
+          oldValue = _change[2],
+          newValue = _change[3];
+
+      return oldValue !== newValue;
+    });
+
+    if (!hasDifferences) {
+      return;
+    }
+
+    var clonedChanges = changes.reduce(function (arr, change) {
+      arr.push([].concat(_toConsumableArray(change)));return arr;
+    }, []);
+
+    (0, _array.arrayEach)(clonedChanges, function (change) {
+      change[1] = instance.propToCol(change[1]);
+    });
+
+    var selected = changesLen > 1 ? this.getSelected() : [[clonedChanges[0][0], clonedChanges[0][1]]];
+
+    plugin.done(new UndoRedo.ChangeAction(clonedChanges, selected));
   });
 
   instance.addHook('afterCreateRow', function (index, amount, source) {
@@ -62047,12 +62073,11 @@ function UndoRedo(instance) {
     }
 
     var originalData = plugin.instance.getSourceDataArray();
+    var rowIndex = (originalData.length + index) % originalData.length;
+    var physicalRowIndex = instance.toPhysicalRow(rowIndex);
+    var removedData = (0, _object.deepClone)(originalData.slice(physicalRowIndex, physicalRowIndex + amount));
 
-    index = (originalData.length + index) % originalData.length;
-
-    var removedData = (0, _object.deepClone)(originalData.slice(index, index + amount));
-
-    plugin.done(new UndoRedo.RemoveRowAction(index, removedData));
+    plugin.done(new UndoRedo.RemoveRowAction(rowIndex, removedData));
   });
 
   instance.addHook('afterCreateCol', function (index, amount, source) {
@@ -62069,9 +62094,7 @@ function UndoRedo(instance) {
     }
 
     var originalData = plugin.instance.getSourceDataArray();
-
-    index = (plugin.instance.countCols() + index) % plugin.instance.countCols();
-
+    var columnIndex = (plugin.instance.countCols() + index) % plugin.instance.countCols();
     var removedData = [];
     var headers = [];
     var indexes = [];
@@ -62080,26 +62103,25 @@ function UndoRedo(instance) {
       var column = [];
       var origRow = originalData[i];
 
-      (0, _number.rangeEach)(index, index + (amount - 1), function (j) {
+      (0, _number.rangeEach)(columnIndex, columnIndex + (amount - 1), function (j) {
         column.push(origRow[instance.runHooks('modifyCol', j)]);
       });
       removedData.push(column);
     });
 
     (0, _number.rangeEach)(amount - 1, function (i) {
-      indexes.push(instance.runHooks('modifyCol', index + i));
+      indexes.push(instance.runHooks('modifyCol', columnIndex + i));
     });
 
     if (Array.isArray(instance.getSettings().colHeaders)) {
       (0, _number.rangeEach)(amount - 1, function (i) {
-        headers.push(instance.getSettings().colHeaders[instance.runHooks('modifyCol', index + i)] || null);
+        headers.push(instance.getSettings().colHeaders[instance.runHooks('modifyCol', columnIndex + i)] || null);
       });
     }
 
     var manualColumnMovePlugin = plugin.instance.getPlugin('manualColumnMove');
-
     var columnsMap = manualColumnMovePlugin.isEnabled() ? manualColumnMovePlugin.columnsMapper.__arrayMap : [];
-    var action = new UndoRedo.RemoveColumnAction(index, indexes, removedData, headers, columnsMap);
+    var action = new UndoRedo.RemoveColumnAction(columnIndex, indexes, removedData, headers, columnsMap);
 
     plugin.done(action);
   });
@@ -62146,10 +62168,12 @@ UndoRedo.prototype.done = function (action) {
 };
 
 /**
- * Undo last edit.
+ * Undo the last action performed to the table.
  *
  * @function undo
  * @memberof UndoRedo#
+ * @fires Hooks#beforeUndo
+ * @fires Hooks#afterUndo
  */
 UndoRedo.prototype.undo = function () {
   if (this.isUndoAvailable()) {
@@ -62175,10 +62199,12 @@ UndoRedo.prototype.undo = function () {
 };
 
 /**
- * Redo edit (used to reverse an undo).
+ * Redo the previous action performed to the table (used to reverse an undo).
  *
  * @function redo
  * @memberof UndoRedo#
+ * @fires Hooks#beforeRedo
+ * @fires Hooks#afterRedo
  */
 UndoRedo.prototype.redo = function () {
   if (this.isRedoAvailable()) {
@@ -62204,18 +62230,18 @@ UndoRedo.prototype.redo = function () {
 };
 
 /**
- * Check if undo action is available.
+ * Checks if undo action is available.
  *
  * @function isUndoAvailable
  * @memberof UndoRedo#
- * @return {Boolean} Return `true` if undo can be performed, `false` otherwise
+ * @return {Boolean} Return `true` if undo can be performed, `false` otherwise.
  */
 UndoRedo.prototype.isUndoAvailable = function () {
   return this.doneActions.length > 0;
 };
 
 /**
- * Check if redo action is available.
+ * Checks if redo action is available.
  *
  * @function isRedoAvailable
  * @memberof UndoRedo#
@@ -62242,17 +62268,20 @@ UndoRedo.Action.prototype.redo = function () {};
 
 /**
  * Change action.
+ *
+ * @private
  */
-UndoRedo.ChangeAction = function (changes) {
+UndoRedo.ChangeAction = function (changes, selected) {
   this.changes = changes;
+  this.selected = selected;
   this.actionType = 'change';
 };
 (0, _object.inherit)(UndoRedo.ChangeAction, UndoRedo.Action);
 
 UndoRedo.ChangeAction.prototype.undo = function (instance, undoneCallback) {
-  var data = (0, _object.deepClone)(this.changes),
-      emptyRowsAtTheEnd = instance.countEmptyRows(true),
-      emptyColsAtTheEnd = instance.countEmptyCols(true);
+  var data = (0, _object.deepClone)(this.changes);
+  var emptyRowsAtTheEnd = instance.countEmptyRows(true);
+  var emptyColsAtTheEnd = instance.countEmptyCols(true);
 
   for (var i = 0, len = data.length; i < len; i++) {
     data[i].splice(3, 1);
@@ -62260,21 +62289,27 @@ UndoRedo.ChangeAction.prototype.undo = function (instance, undoneCallback) {
 
   instance.addHookOnce('afterChange', undoneCallback);
 
-  instance.setDataAtRowProp(data, null, null, 'UndoRedo.undo');
+  instance.setDataAtCell(data, null, null, 'UndoRedo.undo');
 
   for (var _i = 0, _len = data.length; _i < _len; _i++) {
-    if (instance.getSettings().minSpareRows && data[_i][0] + 1 + instance.getSettings().minSpareRows === instance.countRows() && emptyRowsAtTheEnd === instance.getSettings().minSpareRows) {
+    var _data$_i = _slicedToArray(data[_i], 2),
+        row = _data$_i[0],
+        column = _data$_i[1];
 
-      instance.alter('remove_row', parseInt(data[_i][0] + 1, 10), instance.getSettings().minSpareRows);
+    if (instance.getSettings().minSpareRows && row + 1 + instance.getSettings().minSpareRows === instance.countRows() && emptyRowsAtTheEnd === instance.getSettings().minSpareRows) {
+
+      instance.alter('remove_row', parseInt(row + 1, 10), instance.getSettings().minSpareRows);
       instance.undoRedo.doneActions.pop();
     }
 
-    if (instance.getSettings().minSpareCols && data[_i][1] + 1 + instance.getSettings().minSpareCols === instance.countCols() && emptyColsAtTheEnd === instance.getSettings().minSpareCols) {
+    if (instance.getSettings().minSpareCols && column + 1 + instance.getSettings().minSpareCols === instance.countCols() && emptyColsAtTheEnd === instance.getSettings().minSpareCols) {
 
-      instance.alter('remove_col', parseInt(data[_i][1] + 1, 10), instance.getSettings().minSpareCols);
+      instance.alter('remove_col', parseInt(column + 1, 10), instance.getSettings().minSpareCols);
       instance.undoRedo.doneActions.pop();
     }
   }
+
+  instance.selectCells(this.selected, false, false);
 };
 UndoRedo.ChangeAction.prototype.redo = function (instance, onFinishCallback) {
   var data = (0, _object.deepClone)(this.changes);
@@ -62284,11 +62319,17 @@ UndoRedo.ChangeAction.prototype.redo = function (instance, onFinishCallback) {
   }
 
   instance.addHookOnce('afterChange', onFinishCallback);
-  instance.setDataAtRowProp(data, null, null, 'UndoRedo.redo');
+  instance.setDataAtCell(data, null, null, 'UndoRedo.redo');
+
+  if (this.selected) {
+    instance.selectCells(this.selected, false, false);
+  }
 };
 
 /**
  * Create row action.
+ *
+ * @private
  */
 UndoRedo.CreateRowAction = function (index, amount) {
   this.index = index;
@@ -62298,8 +62339,8 @@ UndoRedo.CreateRowAction = function (index, amount) {
 (0, _object.inherit)(UndoRedo.CreateRowAction, UndoRedo.Action);
 
 UndoRedo.CreateRowAction.prototype.undo = function (instance, undoneCallback) {
-  var rowCount = instance.countRows(),
-      minSpareRows = instance.getSettings().minSpareRows;
+  var rowCount = instance.countRows();
+  var minSpareRows = instance.getSettings().minSpareRows;
 
   if (this.index >= rowCount && this.index - minSpareRows < rowCount) {
     this.index -= minSpareRows; // work around the situation where the needed row was removed due to an 'undo' of a made change
@@ -62315,6 +62356,8 @@ UndoRedo.CreateRowAction.prototype.redo = function (instance, redoneCallback) {
 
 /**
  * Remove row action.
+ *
+ * @private
  */
 UndoRedo.RemoveRowAction = function (index, data) {
   this.index = index;
@@ -62335,6 +62378,8 @@ UndoRedo.RemoveRowAction.prototype.redo = function (instance, redoneCallback) {
 
 /**
  * Create column action.
+ *
+ * @private
  */
 UndoRedo.CreateColumnAction = function (index, amount) {
   this.index = index;
@@ -62354,6 +62399,8 @@ UndoRedo.CreateColumnAction.prototype.redo = function (instance, redoneCallback)
 
 /**
  * Remove column action.
+ *
+ * @private
  */
 UndoRedo.RemoveColumnAction = function (index, indexes, data, headers, columnPositions) {
   this.index = index;
@@ -62431,6 +62478,8 @@ UndoRedo.RemoveColumnAction.prototype.redo = function (instance, redoneCallback)
 
 /**
  * Cell alignment action.
+ *
+ * @private
  */
 UndoRedo.CellAlignmentAction = function (stateBefore, range, type, alignment) {
   this.stateBefore = stateBefore;
@@ -62468,6 +62517,8 @@ UndoRedo.CellAlignmentAction.prototype.redo = function (instance, undoneCallback
 
 /**
  * Filters action.
+ *
+ * @private
  */
 UndoRedo.FiltersAction = function (conditionsStack) {
   this.conditionsStack = conditionsStack;
@@ -62577,6 +62628,8 @@ UndoRedo.UnmergeCellsAction = UnmergeCellsAction;
 
 /**
  * ManualRowMove action.
+ *
+ * @private
  * @TODO: removeRow undo should works on logical index
  */
 UndoRedo.RowMoveAction = function (movedRows, target) {
@@ -62617,7 +62670,7 @@ UndoRedo.RowMoveAction.prototype.redo = function (instance, redoneCallback) {
 
 function init() {
   var instance = this;
-  var pluginEnabled = typeof instance.getSettings().undo == 'undefined' || instance.getSettings().undo;
+  var pluginEnabled = typeof instance.getSettings().undo === 'undefined' || instance.getSettings().undo;
 
   if (pluginEnabled) {
     if (!instance.undoRedo) {
@@ -62646,20 +62699,39 @@ function init() {
 }
 
 function onBeforeKeyDown(event) {
+  if ((0, _event.isImmediatePropagationStopped)(event)) {
+    return;
+  }
+
   var instance = this;
+  var editor = instance.getActiveEditor();
 
-  var ctrlDown = (event.ctrlKey || event.metaKey) && !event.altKey;
+  if (editor && editor.isOpened()) {
+    return;
+  }
 
-  if (ctrlDown) {
-    if (event.keyCode === 89 || event.shiftKey && event.keyCode === 90) {
-      // CTRL + Y or CTRL + SHIFT + Z
-      instance.undoRedo.redo();
-      (0, _event.stopImmediatePropagation)(event);
-    } else if (event.keyCode === 90) {
-      // CTRL + Z
-      instance.undoRedo.undo();
-      (0, _event.stopImmediatePropagation)(event);
-    }
+  var altKey = event.altKey,
+      ctrlKey = event.ctrlKey,
+      keyCode = event.keyCode,
+      metaKey = event.metaKey,
+      shiftKey = event.shiftKey;
+
+  var isCtrlDown = (ctrlKey || metaKey) && !altKey;
+
+  if (!isCtrlDown) {
+    return;
+  }
+
+  var isRedoHotkey = keyCode === 89 || shiftKey && keyCode === 90;
+
+  if (isRedoHotkey) {
+    // CTRL + Y or CTRL + SHIFT + Z
+    instance.undoRedo.redo();
+    (0, _event.stopImmediatePropagation)(event);
+  } else if (keyCode === 90) {
+    // CTRL + Z
+    instance.undoRedo.undo();
+    (0, _event.stopImmediatePropagation)(event);
   }
 }
 
@@ -62754,7 +62826,7 @@ var _base = __webpack_require__(10);
 
 var _base2 = _interopRequireDefault(_base);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 var _plugins = __webpack_require__(8);
 
@@ -63259,7 +63331,7 @@ var _arrayMapper2 = _interopRequireDefault(_arrayMapper);
 
 var _object = __webpack_require__(2);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(4);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
